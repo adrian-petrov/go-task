@@ -8,7 +8,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "task",
+	Use:   "go-task",
 	Short: "Task is a CLI task manager",
 }
 
