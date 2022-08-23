@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"go-task/db"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -16,11 +17,30 @@ var doCmd = &cobra.Command{
 			id, err := strconv.Atoi(arg)
 			if err != nil {
 				fmt.Printf("Failed to parse the argument: %v. Please provide an id", arg)
-				continue
+				return
 			}
 			ids[i] = id
 		}
-		fmt.Printf("\nThe ids are: %v", ids)
+		tasks, err := db.AllTasks()
+		if err != nil {
+			fmt.Println("Something went wrong")
+			return
+		}
+		for _, id := range ids {
+			if id <= 0 || id > len(tasks) {
+				fmt.Println("Invalid task number")
+				continue
+			}
+			task := tasks[id-1]
+			err := db.DeleteTask(task.Key)
+			if err != nil {
+				fmt.Printf("failed to mark \"%d\" as completed. Error: %s\n", id, err)
+			} else {
+				fmt.Printf("Marked \"%d\" as completed", id)
+			}
+
+		}
+
 	},
 }
 
